@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/colors/light_colors.dart';
 
@@ -79,7 +78,7 @@ class Welcome extends StatelessWidget {
                                     builder: (context) => LoginPage(),
                                     fullscreenDialog: true));
                           },
-                          child: Text('Sign In', style: TextStyle(
+                          child: Text('Login', style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 18
                           ),),

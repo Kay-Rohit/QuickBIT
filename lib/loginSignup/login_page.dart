@@ -131,7 +131,7 @@ import 'package:flutter_app/colors/light_colors.dart';
         formState.save();
         try{
           UserCredential user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
         }catch(e){
           print(e);
         }

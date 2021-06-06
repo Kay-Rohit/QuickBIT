@@ -7,7 +7,97 @@ import 'package:flutter_app/colors/light_colors.dart';
 
 import 'package:flutter_app/loginSignup/login_page.dart';
 import 'package:flutter_app/loginSignup/welcome.dart';
+import 'package:flutter_app/pageComponents/profilePageComponent/appbar_widget.dart';
+import 'package:flutter_app/pageComponents/profilePageComponent/button_widget.dart';
+import 'package:flutter_app/pageComponents/profilePageComponent/other_widget.dart';
+import 'package:flutter_app/pageComponents/profilePageComponent/profile_widget.dart';
+import 'package:flutter_app/pageComponents/profilePageComponent/user_preferences.dart';
+import 'package:flutter_app/pageComponents/profilePageComponent/model/user.dart';
 
+
+class ProfilePage extends StatefulWidget {
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  @override
+  Widget build(BuildContext context) {
+    final user = UserPreferences.myUser;
+
+    return Scaffold(
+      appBar: buildAppBar(context),
+      body: ListView(
+        physics: BouncingScrollPhysics(),
+        children: [
+          ProfileWidget(
+            imagePath: user.imagePath,
+            onClicked: () async {},
+          ),
+          const SizedBox(height: 24),
+          buildName(user),
+          const SizedBox(height: 24),
+          Center(child: buildUpgradeButton()),
+          const SizedBox(height: 24),
+          NumbersWidget(),
+          const SizedBox(height: 48),
+          buildAbout(user),
+        ],
+      ),
+    );
+  }
+
+  Widget buildName(LocalUser user) => Column(
+    children: [
+      Text(
+        user.name,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+      ),
+      const SizedBox(height: 4),
+      Text(
+        user.email,
+        style: TextStyle(color: Colors.grey),
+      )
+    ],
+  );
+
+  Widget buildUpgradeButton() => ButtonWidget(
+    text: 'Update Profile',
+    onClicked: () {},
+  );
+
+  Widget buildAbout(LocalUser user) => Container(
+    padding: EdgeInsets.symmetric(horizontal: 48),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'About',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          "Piyush Kumar",
+          style: TextStyle(fontSize: 16, height: 1.4),
+        ),
+        Text(
+          "testmail@gmail.com",
+          style: TextStyle(fontSize: 16, height: 1.4),
+        ),
+        Text(
+          "6th sem",
+          style: TextStyle(fontSize: 16, height: 1.4),
+        ),
+        Text(
+          "Computer Science and Engineering",
+          style: TextStyle(fontSize: 16, height: 1.4),
+        ),
+      ],
+    ),
+  );
+
+}
+/*
 class Profile extends StatelessWidget{
 
   final User? userInfo = FirebaseAuth.instance.currentUser;
@@ -118,7 +208,7 @@ class Profile extends StatelessWidget{
 
 
 
-          /* Center(
+          Center(
                 child: Container(
                     height: MediaQuery
                         .of(context)
@@ -156,7 +246,7 @@ class Profile extends StatelessWidget{
                   )
                 ),
 
-              ); */
+              );
 
         },
       ),
@@ -206,4 +296,6 @@ class Profile extends StatelessWidget{
     );
   }
 }
-*/
+
+ */
+ */

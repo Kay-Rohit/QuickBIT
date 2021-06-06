@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_app/colors/light_colors.dart';
+import 'package:validators/validators.dart';
 
+import 'package:flutter_app/colors/light_colors.dart';
 import 'package:flutter_app/loginSignup/login_page.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -11,8 +12,32 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUpPage> {
-  late String _email, _password, _confrmpass;
+  late String _email, _password, _cnfrmpass;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+/*
+//To show errors returned by firestore
+  Widget showAlert() {
+    if(_error != null){
+      return Container(
+        color: LightColors.kRed,
+        width: double.infinity,
+        padding: EdgeInsets.only(right: 8.0),
+        child: Row(
+          children: <Widget>[
+            Icon(Icons.error_outline),
+            Expanded(child: Text(_error, maxLines: 3,)),
+            IconButton(onPressed: (){
+              setState(() {
+
+              });
+            }, icon: Icon(Icons.close))
+          ],
+        ),
+      );
+    }
+    return SizedBox(height: 0,);
+  }
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +62,7 @@ class _SignUpState extends State<SignUpPage> {
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                child: Column(
                     children: <Widget>[
+                      //showAlert(),
                       Expanded(
                         child: SingleChildScrollView(
                           child: Column(
@@ -54,8 +80,8 @@ class _SignUpState extends State<SignUpPage> {
                                     SizedBox(height: 10,),
                                     TextFormField(
                                       validator: (input){
-                                        if(input!.isEmpty){
-                                          return 'Please type an email';
+                                        if(input!.isEmpty || !isEmail(input)){
+                                          return 'Please enter a valid email';
                                         }
                                       },
                                       decoration: InputDecoration(
@@ -81,14 +107,14 @@ class _SignUpState extends State<SignUpPage> {
                                       decoration: InputDecoration(
                                           labelText: 'confirm password'
                                       ),
-                                      onSaved: (input) => _confrmpass = input!,
+                                      onSaved: (input) => _cnfrmpass = input!,
                                     ),
                                     // ignore: deprecated_member_use
-                                    SizedBox(height: 30,),
+                                    SizedBox(height: 40,),
                                     ButtonTheme(
                                       minWidth: double.infinity,
+                                      buttonColor: LightColors.kBlue,
                                       child: RaisedButton(
-                                        hoverColor: Colors.lightBlue,
                                         textColor: Colors.white,
                                         shape: RoundedRectangleBorder(
                                             side: BorderSide(
@@ -103,7 +129,14 @@ class _SignUpState extends State<SignUpPage> {
                                         ),),
                                       ),
                                     ),
-
+                                    SizedBox(height: 10,),
+                                    Text("Already have an account?"),
+                                    FlatButton(
+                                      child: Text("Login here!"),
+                                      onPressed: () {
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                                      },
+                                    )
                                   ],
                                 ),
                               ),
@@ -117,7 +150,6 @@ class _SignUpState extends State<SignUpPage> {
     );
   }
 
-
   Future<void> signUp() async{
     final formState = _formKey.currentState;
     Firebase.initializeApp();
@@ -126,16 +158,20 @@ class _SignUpState extends State<SignUpPage> {
       //signup to firebase
       formState.save();
       try {
-        UserCredential user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        //UserCredential user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: _email,
             password: _password
         );
-        Navigator.of(context).pop();
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
       } on FirebaseAuthException catch (e) {
-        if (e.code == 'weak-password') {
+        if (e.code == 'weak-password'){
           print('The password provided is too weak.');
         } else if (e.code == 'email-already-in-use') {
+          /*setState(() {
+            _error = e.message!;
+          });
+          */
           print('The account already exists for that email.');
         }
       } catch (e) {
